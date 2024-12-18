@@ -41,12 +41,6 @@ class AuthService {
 
   async login(email, password) {
     try {
-      const existingUser = await userRepository.findByEmail(
-        email
-      );
-      if (existingUser) {
-        throw new Error("Email sudah terdaftar");
-      }
       const { data, error } =
         await supabase.auth.signInWithPassword({
           email,
