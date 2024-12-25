@@ -3,6 +3,8 @@ const {
   register,
   login,
   logout,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/authController");
 const {
   requireAuth,
@@ -11,8 +13,8 @@ const {
 const router = express.Router();
 
 router.post("/register", register);
-router.post("/login", login);
 router.post("/logout", requireAuth, logout);
+router.post("/forgot-password", forgotPassword);
 
 router.get("/profile", requireAuth, (req, res) => {
   res.json({ user: req.user });

@@ -10,7 +10,6 @@ class AuthService {
       if (existingUser) {
         throw new Error("Email sudah terdaftar");
       }
-
       const { data, error: supabaseError } =
         await supabase.auth.signUp(
           {
@@ -39,31 +38,28 @@ class AuthService {
     }
   }
 
-  async login(email, password) {
+  async logout() {
     try {
-      const { data, error } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return {
-        user: data.user,
-        session: data.session,
-      };
+      await supabase.auth.signOut();
+      return { message: "Logout berhasil" };
     } catch (error) {
       throw error;
     }
   }
 
-  async logout() {
+  async forgotPassword(email) {
     try {
-      await supabase.auth.signOut();
-      return { message: "Logout berhasil" };
+      const user = await userRepository.findByEmail(email);
+      if (!user) {
+        throw new Error("Uh Oh! User Not Found");
+      }
+      const { data, error } =
+        await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo:
+            "http://localhost:5173/reset-password",
+        });
+
+      if (error) throw error;
     } catch (error) {
       throw error;
     }

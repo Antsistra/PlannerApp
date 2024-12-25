@@ -4,7 +4,7 @@ const register = async (req, res) => {
   const { email, password, name, role } = req.body;
   try {
     const result = await authService.register(
-      email,
+      email.toLowerCase(),
       password,
       name,
       role
@@ -15,14 +15,15 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
-
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
   try {
-    const result = await authService.login(email, password);
+    const result = await authService.forgotPassword(
+      email.toLowerCase()
+    );
     res.json(result);
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -35,4 +36,8 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout };
+module.exports = {
+  register,
+  logout,
+  forgotPassword,
+};
