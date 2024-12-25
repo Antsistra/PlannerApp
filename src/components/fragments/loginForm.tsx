@@ -9,40 +9,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { validateInput } from "@/utils/authUtils";
-import { supabase } from "@/lib/supabase";
+import { handleLogin, validateInput } from "@/utils/authUtils";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleInput = async () => {
-    try {
-      if (validateInput(email, password)) {
-        const { error } =
-          await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-          });
-        if (error) throw error;
-        Swal.fire({
-          title: "Success!",
-          text: "Login Berhasil",
-          icon: "success",
-          confirmButtonText: "Ok",
-        }).then(() => {
-          window.location.href = "/";
-        });
-      }
-    } catch (error: any) {
-      Swal.fire({
-        title: "Error!",
-        text: error.message,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+    if (validateInput(email, password)) {
+      handleLogin(email, password);
     }
   };
   return (
@@ -75,9 +51,7 @@ export function LoginForm() {
                 Password
               </Label>
               <Input
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => setPassword(e.target.value)}
                 className="h-10"
                 type="password"
                 id="Password"
@@ -88,16 +62,15 @@ export function LoginForm() {
         </form>
         <div className="flex justify-end mt-6">
           <Link to="/forgot-password">
-            <p className="font-semibold">
-              Forgot Password?
-            </p>
+            <p className="font-semibold">Forgot Password?</p>
           </Link>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col justify-center">
         <Button
           className="w-full h-12 rounded-full text-lg"
-          onClick={() => handleInput()}>
+          onClick={() => handleInput()}
+        >
           Login
         </Button>
         <h3 className="mt-4">

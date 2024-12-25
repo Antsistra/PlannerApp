@@ -18,25 +18,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  handleRegister,
-  validateRegisterInput,
-} from "@/utils/authUtils";
+import { handleRegister, validateRegisterInput } from "@/utils/authUtils";
 
 interface RegisterFormProps {
   setIsLoading: (isLoading: boolean) => void;
 }
 
-export default function RegisterForm({
-  setIsLoading,
-}: RegisterFormProps) {
+export default function RegisterForm({ setIsLoading }: RegisterFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const handleInput = async () => {
-    if (!validateRegisterInput(name, email, password, role))
-      return;
+    if (!validateRegisterInput(name, email, password, role)) return;
 
     setIsLoading(true);
     await handleRegister(name, email, password, role);
@@ -85,9 +79,7 @@ export default function RegisterForm({
                   Password
                 </Label>
                 <Input
-                  onChange={(e) =>
-                    setPassword(e.target.value)
-                  }
+                  onChange={(e) => setPassword(e.target.value)}
                   className="h-10"
                   type="password"
                   id="Password"
@@ -96,18 +88,13 @@ export default function RegisterForm({
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="Role">Select Role</Label>
-                <Select
-                  onValueChange={(value) => setRole(value)}>
+                <Select onValueChange={(value) => setRole(value)}>
                   <SelectTrigger id="Role">
                     <SelectValue placeholder="Select Role" />
                   </SelectTrigger>
                   <SelectContent position="popper">
-                    <SelectItem value="Student">
-                      Student
-                    </SelectItem>
-                    <SelectItem value="Lecturer">
-                      Lecturer
-                    </SelectItem>
+                    <SelectItem value="Student">Student</SelectItem>
+                    <SelectItem value="Lecturer">Lecturer</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -117,7 +104,8 @@ export default function RegisterForm({
         <CardFooter className="flex flex-col justify-center">
           <Button
             className="w-full h-12 rounded-full text-lg"
-            onClick={() => handleInput()}>
+            onClick={() => handleInput()}
+          >
             <p>Register</p>
           </Button>
           <h3 className="mt-4">

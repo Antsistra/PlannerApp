@@ -4,25 +4,22 @@ const userRepository = require("../repository/userRepository");
 class AuthService {
   async register(email, password, name, role) {
     try {
-      const existingUser = await userRepository.findByEmail(
-        email
-      );
+      const existingUser = await userRepository.findByEmail(email);
       if (existingUser) {
         throw new Error("Email sudah terdaftar");
       }
-      const { data, error: supabaseError } =
-        await supabase.auth.signUp(
-          {
-            email,
-            password,
-          },
-          {
-            data: { name },
-          }
-        );
+      const { data, error: supabaseError } = await supabase.auth.signUp(
+        {
+          email,
+          password,
+        },
+        {
+          data: { name },
+        }
+      );
 
       if (supabaseError) {
-        throw new Error(supabaseError.message);
+        throw new Error("Error, Something went wrong");
       }
 
       const user = await userRepository.create({
@@ -53,11 +50,9 @@ class AuthService {
       if (!user) {
         throw new Error("Uh Oh! User Not Found");
       }
-      const { data, error } =
-        await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo:
-            "http://localhost:5173/reset-password",
-        });
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: "http://localhost:5173/reset-password",
+      });
 
       if (error) throw error;
     } catch (error) {

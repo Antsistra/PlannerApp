@@ -17,8 +17,7 @@ export default function RegisterLayout() {
         </div>
       </div>
       <div className="flex justify-center items-center md:w-1/2 w-full ">
-        <RegisterForm
-          setIsLoading={setIsLoading}></RegisterForm>
+        <RegisterForm setIsLoading={setIsLoading}></RegisterForm>
       </div>
     </>
   );

@@ -16,10 +16,7 @@ export function getAccessTokenFromHash() {
   return params.get("access_token");
 }
 
-export const validateInput = (
-  email: string,
-  password: string
-): boolean => {
+export const validateInput = (email: string, password: string): boolean => {
   if (!email || !password) {
     Swal.fire({
       title: "Error!",
@@ -37,11 +34,10 @@ export const handleLogin = async (
   password: string
 ): Promise<void> => {
   try {
-    const { error } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) throw error;
     Swal.fire({
       title: "Success!",
@@ -52,34 +48,20 @@ export const handleLogin = async (
       window.location.href = "/";
     });
   } catch (error: any) {
+    console.log(error);
+    let message = "";
+    if (error.message === "Email not confirmed") {
+      message = "Email not Confirmed, Please Check Your Email";
+    } else if (error.message === "Invalid login credentials") {
+      message = "Wrong Email or Password";
+    }
     Swal.fire({
       title: "Error!",
-      text: error.message,
+      text: message,
       icon: "error",
-      confirmButtonText: "OK",
+      confirmButtonText: "Back",
     });
   }
-};
-
-export const handleLoginError = (
-  error: LoginError
-): void => {
-  const errorMessage = error?.response?.data?.error;
-
-  let message = "An error occurred";
-  if (errorMessage === "Email not confirmed") {
-    message =
-      "Email not Confirmed, Please Check Your Email";
-  } else if (errorMessage === "Invalid login credentials") {
-    message = "Wrong Email or Password";
-  }
-
-  Swal.fire({
-    title: "Error!",
-    text: message,
-    icon: "error",
-    confirmButtonText: "Back",
-  });
 };
 
 export const validateRegisterInput = (
@@ -159,9 +141,7 @@ export const handleRegister = async (
   }
 };
 
-export const handleResetPassword = async (
-  password: string
-): Promise<void> => {
+export const handleResetPassword = async (password: string): Promise<void> => {
   try {
     const { error } = await supabase.auth.updateUser({
       password: password,
@@ -173,9 +153,7 @@ export const handleResetPassword = async (
       icon: "success",
       confirmButtonText: "Ok",
     }).then(() => {
-      localStorage.removeItem(
-        `sb-${supabaseUrlKey}-auth-token`
-      );
+      localStorage.removeItem(`sb-${supabaseUrlKey}-auth-token`);
       window.location.href = "/login";
     });
   } catch (error: any) {
@@ -188,16 +166,14 @@ export const handleResetPassword = async (
   }
 };
 
-export const handleForgotPassword = async (
-  email: string
-): Promise<void> => {
+export const handleForgotPassword = async (email: string): Promise<void> => {
   try {
     await axiosInstance.post("/auth/forgot-password", {
       email,
     });
     Swal.fire({
       title: "Success!",
-      text: "Email sent",
+      text: "Recovery Email Sent Successfully",
       icon: "success",
       confirmButtonText: "Ok",
     }).then(() => {
